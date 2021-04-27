@@ -10,7 +10,51 @@ import java.util.List;
 
 public class BookInfoDao {
     public boolean addListFromFile(String pathname) {
-        return false;
+        Connection connection = DBConnection.getConnection();
+        PreparedStatement preparedStatement = null;
+        BufferedReader bufferedReader = null;
+        boolean flag = true;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(new File(pathname)));
+            String line;
+            String[] infos;
+            for (int i = 0; i < 10; i++) {
+                line = bufferedReader.readLine();
+                infos = line.split("###");
+                String addInfoStr = "insert into bookinfo(bookName,price,nick) values(?,?,?)";
+                preparedStatement = connection.prepareStatement(addInfoStr);
+                preparedStatement.setString(1, infos[0]);
+                preparedStatement.setDouble(2, Double.valueOf(infos[1]));
+                preparedStatement.setString(3, infos[2]);
+                int res = preparedStatement.executeUpdate();
+                if (res < 0) {
+                    flag = false;
+                    break;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return flag;
     }
 
     public List<BookInfo> getTotalBookInfo(){
