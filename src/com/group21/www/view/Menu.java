@@ -39,11 +39,26 @@ public class Menu {
                     }
                     break;
                 case "4":
-                    bookInfoDao.fuzzySearch(bookName);
+                    System.out.print("请输入书名：");
+                    String bookName = scanner.next();
+                    List<BookInfo> bookInfos = bookInfoDao.fuzzySearch(bookName);
+                    if (bookInfos == null || bookInfos.size() == 0) {
+                        System.out.println("无数据");
+                    }else {
+                        for (BookInfo bookInfo : bookInfos) {
+                            System.out.println(bookInfo);
+                        }
+                    }
                     break;
                 case "5":
-                    bookInfoDao.delBookInfoByBookId(delBookId);
-                    
+                    System.out.print("请输入id：");
+                    int delBookId = scanner.nextInt();
+                    boolean delRes = bookInfoDao.delBookInfoByBookId(delBookId);
+                    if (delRes) {
+                        System.out.println("删除成功！");
+                    }else {
+                        System.out.println("删除失败！");
+                    }
                     break;
                 default:
                     System.out.println("输入有误！");
