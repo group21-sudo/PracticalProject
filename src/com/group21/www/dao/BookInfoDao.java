@@ -89,7 +89,28 @@ public class BookInfoDao {
         return bookInfos;
     }
     public boolean delBookInfoByBookId(int  id){
-        return false;
+        boolean flag = false;
+        String delStr = "delete from bookinfo where id = ?";
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = DBConnection.getConnection().prepareStatement(delStr);
+            preparedStatement.setInt(1,id);
+            int res = preparedStatement.executeUpdate();
+            if (res > 0){
+                flag = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if (preparedStatement!=null){
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return flag;
     }
     public List<BookInfo> fuzzySearch(String key){
         ArrayList<BookInfo> bookInfos = new ArrayList<>();
