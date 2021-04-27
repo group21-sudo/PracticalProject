@@ -14,7 +14,18 @@ public class BookInfoDao {
     }
 
     public List<BookInfo> getTotalBookInfo(){
-        return null;
+        ArrayList<BookInfo> bookInfos = new ArrayList<>();
+        String queryStr = "select * from bookinfo";
+        try {
+            PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement(queryStr);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                bookInfos.add(new BookInfo(resultSet.getInt("id"), resultSet.getString("bookName"), resultSet.getDouble("price"), resultSet.getString("nick")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return bookInfos;
     }
     public boolean delBookInfoByBookId(int  id){
         return false;
