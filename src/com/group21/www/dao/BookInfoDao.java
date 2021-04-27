@@ -23,14 +23,38 @@ public class BookInfoDao {
         ArrayList<BookInfo> bookInfos = new ArrayList<>();
         String queryStr = "select * from bookinfo where bookname like '%"+key+"%'";
         Connection connection = DBConnection.getConnection();
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(queryStr);
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(queryStr);
             while (resultSet.next()){
                 bookInfos.add(new BookInfo(resultSet.getInt("id"), resultSet.getString("bookName"), resultSet.getDouble("price"), resultSet.getString("nick")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return bookInfos;
     }
