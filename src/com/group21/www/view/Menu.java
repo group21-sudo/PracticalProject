@@ -25,17 +25,40 @@ public class Menu {
                     System.out.println("请执行tb.py文件获取实时数据");
                     break;
                 case "2":
-                    bookInfoDao.addListFromFile("D:\\list.txt");
+                    boolean res = bookInfoDao.addListFromFile("D:\\src\\list.txt");
+                    if (res) {
+                        System.out.println("存入成功！");
+                    }else {
+                        System.out.println("存入失败！");
+                    }
                     break;
                 case "3":
-                    bookInfoDao.getTotalBookInfo();
+                    List<BookInfo> totalBookInfo = bookInfoDao.getTotalBookInfo();
+                    for (BookInfo bookInfo : totalBookInfo) {
+                        System.out.println(bookInfo);
+                    }
                     break;
                 case "4":
-                    bookInfoDao.fuzzySearch(bookName);
+                    System.out.print("请输入书名：");
+                    String bookName = scanner.next();
+                    List<BookInfo> bookInfos = bookInfoDao.fuzzySearch(bookName);
+                    if (bookInfos == null || bookInfos.size() == 0) {
+                        System.out.println("无数据");
+                    }else {
+                        for (BookInfo bookInfo : bookInfos) {
+                            System.out.println(bookInfo);
+                        }
+                    }
                     break;
                 case "5":
-                    bookInfoDao.delBookInfoByBookId(delBookId);
-                    
+                    System.out.print("请输入id：");
+                    int delBookId = scanner.nextInt();
+                    boolean delRes = bookInfoDao.delBookInfoByBookId(delBookId);
+                    if (delRes) {
+                        System.out.println("删除成功！");
+                    }else {
+                        System.out.println("删除失败！");
+                    }
                     break;
                 default:
                     System.out.println("输入有误！");
