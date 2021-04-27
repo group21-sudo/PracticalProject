@@ -18,7 +18,7 @@ public class BookInfoDao {
             bufferedReader = new BufferedReader(new FileReader(new File(pathname)));
             String line;
             String[] infos;
-            while(1) {
+            for (int i = 0; i < 10; i++) {
                 line = bufferedReader.readLine();
                 infos = line.split("###");
                 String addInfoStr = "insert into bookinfo(bookName,price,nick) values(?,?,?)";
@@ -26,7 +26,11 @@ public class BookInfoDao {
                 preparedStatement.setString(1, infos[0]);
                 preparedStatement.setDouble(2, Double.valueOf(infos[1]));
                 preparedStatement.setString(3, infos[2]);
-                preparedStatement.executeUpdate();
+                int res = preparedStatement.executeUpdate();
+                if (res < 0) {
+                    flag = false;
+                    break;
+                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -39,6 +43,13 @@ public class BookInfoDao {
                 try {
                     bufferedReader.close();
                 } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
