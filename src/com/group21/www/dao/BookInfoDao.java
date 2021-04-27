@@ -16,14 +16,31 @@ public class BookInfoDao {
     public List<BookInfo> getTotalBookInfo(){
         ArrayList<BookInfo> bookInfos = new ArrayList<>();
         String queryStr = "select * from bookinfo";
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
-            PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement(queryStr);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            preparedStatement = DBConnection.getConnection().prepareStatement(queryStr);
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 bookInfos.add(new BookInfo(resultSet.getInt("id"), resultSet.getString("bookName"), resultSet.getDouble("price"), resultSet.getString("nick")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            if (preparedStatement!=null){
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (resultSet!=null){
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return bookInfos;
     }
