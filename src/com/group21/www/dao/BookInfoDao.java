@@ -17,6 +17,15 @@ public class BookInfoDao {
         return null;
     }
     public boolean delBookInfoByBookId(int  id){
+        boolean flag = false;
+        String delStr = "delete from bookinfo where id = ?";
+        try {
+            PreparedStatement preparedStatement = DBConnection.getConnection().prepareStatement(delStr);
+            preparedStatement.setInt(1,id);
+            int res = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
     public List<BookInfo> fuzzySearch(String key){
