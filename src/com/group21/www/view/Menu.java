@@ -25,10 +25,18 @@ public class Menu {
                     System.out.println("请执行tb.py文件获取实时数据");
                     break;
                 case "2":
-                    bookInfoDao.addListFromFile("D:\\list.txt");
+                    boolean res = bookInfoDao.addListFromFile("D:\\src\\list.txt");
+                    if (res) {
+                        System.out.println("存入成功！");
+                    }else {
+                        System.out.println("存入失败！");
+                    }
                     break;
                 case "3":
-                    bookInfoDao.getTotalBookInfo();
+                    List<BookInfo> totalBookInfo = bookInfoDao.getTotalBookInfo();
+                    for (BookInfo bookInfo : totalBookInfo) {
+                        System.out.println(bookInfo);
+                    }
                     break;
                 case "4":
                     bookInfoDao.fuzzySearch(bookName);
