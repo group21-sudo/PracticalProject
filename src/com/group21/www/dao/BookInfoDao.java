@@ -48,6 +48,42 @@ public class BookInfoDao {
         return false;
     }
     public List<BookInfo> fuzzySearch(String key){
-        return null;
+        ArrayList<BookInfo> bookInfos = new ArrayList<>();
+        String queryStr = "select * from bookinfo where bookname like '%"+key+"%'";
+        Connection connection = DBConnection.getConnection();
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(queryStr);
+            while (resultSet.next()){
+                bookInfos.add(new BookInfo(resultSet.getInt("id"), resultSet.getString("bookName"), resultSet.getDouble("price"), resultSet.getString("nick")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return bookInfos;
     }
 }
